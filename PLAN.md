@@ -229,25 +229,23 @@ time. Feedback:
     `PATH_PREFIX` env var from the workflow (and optionally the
     `pathPrefix` plumbing in `.eleventy.js`) since root-relative paths are
     then correct without a prefix.
-  - This fixed workflow has been pushed but **not yet confirmed to run
-    successfully on GitHub** — no `gh` auth available in this session to
-    check the Actions run or confirm Pages is set to Source: "GitHub
-    Actions" in repo settings. That check is still owed.
+  - **Confirmed working 2026-10-12**: user set Pages source to "GitHub
+    Actions" in repo settings and confirmed the deployed site at
+    `https://dol3y.github.io/ecc/` displays correctly (styles/logo load,
+    pathPrefix stopgap is doing its job). End-to-end deploy pipeline is
+    now verified on real infrastructure, not just locally.
 
 ## Outstanding / not yet done
-- Confirm on github.com: Pages source is set to "GitHub Actions"
-  (Settings → Pages), and the latest Actions run on `main` is green —
-  then load `https://dol3y.github.io/ecc/` and sanity-check it looks
-  right (styles/logo load, nav works).
 - Rest of the site's pages (ride reports, guidance, activities,
   newsletters/AGM PDFs, links, archive, contact) — deferred, home+diary
   only so far.
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
   without explicit user sign-off. If/when it happens, remove the
-  `PATH_PREFIX` stopgap described above.
+  `PATH_PREFIX` stopgap described above (see deploy.yml + .eleventy.js).
 
 ## Next step when resuming
-Confirm the Pages deployment is actually live and correct at
-`https://dol3y.github.io/ecc/` (Pages settings + latest Actions run +
-visual check). Then revisit the deferred items: rest of the site pages,
-and — separately, later, with explicit confirmation — DNS cutover.
+Deploy pipeline is live and verified — no infra work left. Next up is
+deferred content: build out the rest of the site's pages (ride reports,
+guidance, activities, newsletters/AGM PDFs, links, archive, contact),
+following the same pattern as home+diary. DNS cutover stays a separate,
+later, explicit-sign-off step.
