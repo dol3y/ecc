@@ -201,37 +201,53 @@ time. Feedback:
 - Git repo was initialized and the proof-of-concept committed (see git log
   — "Initial commit"). The "no git repo" risk noted previously is
   resolved.
+- Repo now has a real GitHub remote (`git@github.com:dol3y/ecc.git`) and
+  has been pushed — `main` locally matches `origin/main`.
 - **GitHub Actions deploy workflow added**: `.github/workflows/deploy.yml`.
   Builds with Eleventy (`npm ci` + `npm run build`) on Node 20, then
   deploys `_site/` to GitHub Pages using the native
   `actions/upload-pages-artifact` + `actions/deploy-pages` flow (no
-  `gh-pages` branch needed). Triggers on push to `master` (the repo's
-  current local branch name) plus manual `workflow_dispatch`.
-  - No `pathPrefix` is set in `.eleventy.js`, and templates use
-    root-relative asset paths (`/css/style.css`, `/images/...`) — this is
-    correct for serving from a custom domain or a GitHub user/org page
-    root, but **would break asset paths if deployed to a project page
-    under a subpath** (e.g. `username.github.io/reponame/`) without
-    adding a matching `pathPrefix`. Worth confirming which case applies
-    once there's a real GitHub remote.
-  - This workflow has **not been run or validated** — there is no GitHub
-    remote configured yet (`git remote -v` is empty), so nothing has
-    actually deployed. It only becomes active once the repo is pushed to
-    GitHub with Pages enabled (Settings → Pages → Source: "GitHub
-    Actions").
+  `gh-pages` branch needed). Triggers on push to `main` plus manual
+  `workflow_dispatch`.
+  - **Found and fixed a bug**: the workflow was still triggering on push
+    to `master`, a leftover from before the repo's branch was renamed to
+    `main` — so despite being pushed to GitHub, the workflow had never
+    once run. Fixed to trigger on `main`.
+  - **Found and fixed the subpath issue flagged in the previous update**:
+    `dol3y/ecc` is a project repo (not `dol3y.github.io`), so Pages serves
+    by default from `https://dol3y.github.io/ecc/`, a subpath — root-
+    relative asset paths would have 404'd. User chose (over custom-domain-
+    now or leave-for-later) to add a `pathPrefix` for now. Implemented as:
+    `.eleventy.js` reads `pathPrefix` from `process.env.PATH_PREFIX`
+    (defaults to `/` for local dev/build, unaffected); the CI workflow
+    sets `PATH_PREFIX: /ecc/` on the build step; every internal
+    href/src in `base.njk`, `nav.njk`, `index.njk`, `diary.njk` now goes
+    through Eleventy's `url` filter so the prefix actually applies.
+    Verified both a plain local build and a `PATH_PREFIX=/ecc/` build
+    produce correct output (checked generated HTML directly). This is a
+    stopgap — if/when DNS cutover to a custom domain happens, drop the
+    `PATH_PREFIX` env var from the workflow (and optionally the
+    `pathPrefix` plumbing in `.eleventy.js`) since root-relative paths are
+    then correct without a prefix.
+  - This fixed workflow has been pushed but **not yet confirmed to run
+    successfully on GitHub** — no `gh` auth available in this session to
+    check the Actions run or confirm Pages is set to Source: "GitHub
+    Actions" in repo settings. That check is still owed.
 
 ## Outstanding / not yet done
+- Confirm on github.com: Pages source is set to "GitHub Actions"
+  (Settings → Pages), and the latest Actions run on `main` is green —
+  then load `https://dol3y.github.io/ecc/` and sanity-check it looks
+  right (styles/logo load, nav works).
 - Rest of the site's pages (ride reports, guidance, activities,
   newsletters/AGM PDFs, links, archive, contact) — deferred, home+diary
   only so far.
-- Repo has no GitHub remote yet — needs to be pushed to a GitHub repo,
-  and Pages source set to "GitHub Actions" in repo settings, before the
-  new workflow does anything.
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
-  without explicit user sign-off.
+  without explicit user sign-off. If/when it happens, remove the
+  `PATH_PREFIX` stopgap described above.
 
 ## Next step when resuming
-Push the repo to GitHub, enable Pages (Source: GitHub Actions) and
-confirm the workflow run succeeds end-to-end on real infrastructure. Then
-revisit the deferred items: rest of the site pages, and — separately,
-later, with explicit confirmation — DNS cutover.
+Confirm the Pages deployment is actually live and correct at
+`https://dol3y.github.io/ecc/` (Pages settings + latest Actions run +
+visual check). Then revisit the deferred items: rest of the site pages,
+and — separately, later, with explicit confirmation — DNS cutover.
