@@ -1,0 +1,37 @@
+<!DOCTYPE html> 
+
+<html>
+<head>
+    <title>Edmonton Cycle Club</title>
+    <link rel="stylesheet" href="ecc.css" />
+
+    
+</head>
+
+<body>
+    <p id="demo">
+    </p>        
+    <script>
+        var bb=new Date(2027,0,1)  /* Kill date=1 Jan 2027.  Don't forget months in javascript run 0-11, so eg 14 Apr 2016 is (2016,3,14) */
+        var today=new Date()
+        if (today>bb)
+        {
+            a='<div class="contents"><h3>Edmonton Cycle Club</h3><p>This site is no longer maintained. </p></div>' 
+            document.getElementById("demo").innerHTML = a
+        }
+        else
+        {
+            window.open("./home.html","_self","","")
+        }
+    </script>
+	<noscript>
+		<div class="contents">
+			<h3>Edmonton Cycle Club</h3>
+            <p>
+				Please enable javascript to continue. See <a href="https://www.enablejavascript.io/">https://www.enablejavascript.io//</a> for more information.
+			</p>
+		</div>
+    </noscript>
+	
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or site.title }}{% if title %} · {{ site.title }}{% endif %}</title>
+  <meta name="description" content="{{ description or site.tagline }}">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header__bar">
+      <a class="site-header__brand" href="/">
+        <span class="site-header__name">{{ site.title }}</span>
+      </a>
+      <details class="nav-toggle">
+        <summary class="nav-toggle__button" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </summary>
+        {% include "partials/nav.njk" %}
+      </details>
+      <img class="site-header__logo" src="/images/ecc-logo-final.svg" alt="{{ site.title }} logo" width="64" height="64">
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; {{ site.buildDate | formatDate("yyyy") }} {{ site.title }}. Membership is free — see the
+        <a href="/#join">contact page</a> to join us.</p>
+      <p class="site-footer__meta">Site last built {{ site.buildDate | formatDate("d LLLL yyyy") }}.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% macro rideCard(ride) %}
+  {% set struck = ride.status == "cancelled" or ride.status == "postponed" %}
+  <article class="ride-card ride-card--{{ ride.status or 'confirmed' }}{% if ride.draft %} ride-card--draft{% endif %}">
+    <div class="ride-card__header">
+      <p class="ride-card__date{% if struck %} is-struck{% endif %}">
+        {{ ride.dateLabel or (ride.date | formatDate) }}
+      </p>
+      {% if ride.status == "cancelled" %}
+        <span class="ride-card__badge ride-card__badge--cancelled">Cancelled</span>
+      {% elif ride.status == "postponed" %}
+        <span class="ride-card__badge ride-card__badge--postponed">Postponed</span>
+      {% endif %}
+      {% if ride.draft %}
+        <span class="ride-card__badge ride-card__badge--draft">Draft — not yet published</span>
+      {% endif %}
+    </div>
+
+    {% if ride.title %}<h3 class="ride-card__title{% if struck %} is-struck{% endif %}">{{ ride.title }}</h3>{% endif %}
+
+    <dl class="ride-card__facts">
+      {% if ride.time %}
+        <div class="ride-card__fact{% if struck %} is-struck{% endif %}">
+          <dt>Time</dt>
+          <dd>{{ ride.time }}{% if ride.timeNote %} <span class="ride-card__note">({{ ride.timeNote }})</span>{% endif %}</dd>
+        </div>
+      {% endif %}
+      {% if ride.place %}
+        <div class="ride-card__fact{% if struck %} is-struck{% endif %}">
+          <dt>Meet at</dt>
+          <dd>
+            {% if ride.place.mapUrl %}<a href="{{ ride.place.mapUrl }}" target="_blank" rel="noopener">{{ ride.place.name }}</a>{% else %}{{ ride.place.name }}{% endif %}
+            {% if ride.place.w3w %} · <a href="https://what3words.com/{{ ride.place.w3w }}" target="_blank" rel="noopener">///{{ ride.place.w3w }}</a>{% endif %}
+          </dd>
+        </div>
+      {% endif %}
+      {% if ride.leader %}
+        <div class="ride-card__fact{% if struck %} is-struck{% endif %}">
+          <dt>Leader</dt>
+          <dd>{{ ride.leader }}</dd>
+        </div>
+      {% endif %}
+    </dl>
+
+    {% if ride.info %}
+      <p class="ride-card__info{% if struck %} is-struck{% endif %}">{{ ride.info | safe }}</p>
+    {% endif %}
+
+    {% if ride.statusNote %}
+      <p class="ride-card__status-note">{{ ride.statusNote | safe }}</p>
+    {% endif %}
+  </article>
+{% endmacro %}

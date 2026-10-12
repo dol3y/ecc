@@ -1,0 +1,13 @@
+<nav class="nav" aria-label="Main">
+  <ul class="nav__list">
+    {% for item in site.nav %}
+      <li class="nav__item">
+        {% if item.href %}
+          <a href="{{ item.href }}"{% if item.href == page.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
+        {% else %}
+          <span class="nav__item--soon" title="Coming soon">{{ item.label }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

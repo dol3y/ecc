@@ -1,0 +1,40 @@
+---
+title: Diary
+layout: layouts/base.njk
+permalink: /diary/
+---
+{% from "partials/ride-card.njk" import rideCard %}
+
+<h1>Ride and Events Diary</h1>
+
+<div class="notice-box">
+  <ul>
+    <li>Rides may be altered at short notice due to unforeseen circumstances or adverse weather forecasts. Please check this page or the WhatsApp group a day or so before the ride.</li>
+    <li>On the ride itself, the leader may change the route and/or destination if they deem it necessary.</li>
+    <li><strong>Participation in our rides is at your own risk, and subject to you abiding by the club's <a href="/conduct/">Code of Conduct</a>.</strong></li>
+    <li>Under 18s should be accompanied by a responsible adult, who is responsible for deciding if a ride is suitable and providing appropriate supervision. To discuss a specific ride, contact the ride leader or <a href="mailto:webmaster@edmontoncycleclub.org">webmaster@edmontoncycleclub.org</a>.</li>
+    <li>Guidance from Cycling UK can be found <a href="https://www.cyclinguk.org/advice" target="_blank" rel="noopener">here</a>.</li>
+  </ul>
+</div>
+
+<p class="diary-callout">
+  Ride leaders and organisers of other events: please send details to
+  <a href="mailto:webmaster@edmontoncycleclub.org">webmaster@edmontoncycleclub.org</a> in good time — meeting time
+  and place, destination, approximate distance and any special notes.
+</p>
+<p class="diary-callout diary-callout--emphasis">
+  Ride times below are when we actually leave. Please arrive at least five minutes early for any ride briefing,
+  earlier still if you want to chat or grab a coffee first.
+</p>
+
+{% for month in collections.diaryMonth %}
+  <section class="diary-month">
+    <h2>{{ month.data.month | formatMonth }}</h2>
+    <div class="ride-list">
+      {% for ride in month.data.rides | published %}{{ rideCard(ride) }}{% endfor %}
+      {% if site.showDrafts %}
+        {% for ride in month.data.rides | draftsOnly %}{{ rideCard(ride) }}{% endfor %}
+      {% endif %}
+    </div>
+  </section>
+{% endfor %}

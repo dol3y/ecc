@@ -1,0 +1,187 @@
+/* ================================================================ GENERAL */
+body
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+	min-width: 1000px;
+}
+
+/* ============================================================ TITLE BLOCK */
+div.header
+{
+    background-color: #538ED5;
+    width: 100%;
+    height: 190px;
+}
+
+div.header h1
+{
+    float: left;
+    padding-top: 70px;
+    padding-left: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 300%;
+    color: #FFFFFF;
+}
+
+div.header img
+{
+    float: right;
+    margin: 10px;
+}
+
+	
+/* =================================================================== MENU */	
+/* Based on http://codepen.io/philhoyt/pen/ujHzd but much amended */
+
+div#menu
+{
+	margin-top:0px
+}
+
+div#menu ul
+{
+	list-style:none;
+	position:relative;
+	float:left;
+	margin:0;
+	padding:0;
+	background-color: #17375D; 
+}
+
+div#menu ul li
+{
+	position:relative;
+	float:left;
+	margin:0;
+	padding:0
+}
+
+div#menu ul a
+{
+	display:block;
+	text-decoration:none;
+	font-weight:700;
+	font-size:12px;
+	line-height:32px;
+	padding:0 15px;
+}
+
+div#menu ul ul
+{
+	display:none;
+	position:absolute;
+	top:100%;
+	left:0;
+	padding:0;
+}
+
+div#menu ul ul li
+{
+	float:none;
+	width:200px;
+}
+
+div#menu ul ul a
+{
+	line-height:120%;
+	padding:10px 15px
+}
+
+div#menu ul li:hover > ul
+{
+	display:block
+}
+
+/* Set colours - to a bear of little brain it's more comprehensible if these are done separately from other properties */
+
+/* Top bar, non selected, white on dark blue */
+div#menu ul li a
+{
+    background-color: #17375D;
+	color: #ffffff;
+}
+
+/* Top bar, selected, black on light blue */
+div#menu ul li:hover a
+{
+    background-color: #C5D9F1;
+	color: #000000;
+}
+
+/* Drop down, non selected, white on dark blue */
+div#menu ul li:hover li a
+{
+    background-color: #17375D;
+	color: #ffffff;
+}
+
+/* Drop down, selected, black on light blue */
+div#menu ul li:hover li:hover a
+{
+    background-color: #C5D9F1;
+	color: #000000;
+}
+
+/* Current selection as selected */
+div#menu ul li.current_selection a
+{
+    background-color: #C5D9F1;
+	color: #000000;
+}
+
+div#menu ul li li.current_selection a
+{
+    background-color: #C5D9F1;
+	color: #000000;
+}
+
+
+/* ================================================================CONTENTS */
+div.contents
+{
+    padding: 5px;
+    clear: both;
+}
+
+div.contents h2
+{
+    font-size: 150%;
+	font-weight: bold;
+}
+
+div.contents h3
+{
+    font-size: 125%;
+	font-weight: bold;
+}
+ 
+/* ================================================================== DIARY */
+div.rubric
+{  
+    border: 2px solid black;
+    font-size: 90%;
+    padding: 0px;
+}
+
+div.diary
+{
+    clear: both;
+}
+
+div.diary tr td:first-child
+{
+    width: 8em;
+    vertical-align:top;
+}
+ 
+/* ================================================================= FOOTER */
+div.footer
+{
+    clear: both;
+	margin-top: 5px;
+	background-color: #cccccc;
+	padding: 5px;
+	font-size: 90%;
+	font-style: italic;
+}	
