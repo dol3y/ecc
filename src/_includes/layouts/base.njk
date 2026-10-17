@@ -13,15 +13,27 @@
   <header class="site-header">
     <div class="site-header__bar">
       <a class="site-header__brand" href="{{ '/' | url }}">
-        <span class="site-header__name">{{ site.title }}</span>
+        <img class="site-header__logo" src="{{ '/images/ecc-logo-final.svg' | url }}" alt="{{ site.title }} logo" width="56" height="56">
       </a>
+
+      <ul class="menu-bar">
+        {% for item in site.nav %}
+          <li>
+            {% if item.href %}
+              <a href="{{ item.href if item.external else (item.href | url) }}">{{ item.label }}</a>
+            {% else %}
+              <span class="menu-bar__soon" title="Coming soon">{{ item.label }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+
       <details class="nav-toggle">
         <summary class="nav-toggle__button" aria-label="Menu">
           <span></span><span></span><span></span>
         </summary>
         {% include "partials/nav.njk" %}
       </details>
-      <img class="site-header__logo" src="{{ '/images/ecc-logo-final.svg' | url }}" alt="{{ site.title }} logo" width="64" height="64">
     </div>
   </header>
 

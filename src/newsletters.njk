@@ -1,0 +1,23 @@
+---
+title: Newsletters
+layout: layouts/base.njk
+permalink: /newsletters/
+newsletters:
+  - issue: "Autumn 2025"
+    file: "newsletter202510.pdf"
+  - issue: "Spring 2025"
+    file: "newsletter202503.pdf"
+  - issue: "Winter 2024/25"
+    file: "newsletter202411.pdf"
+  - issue: "Summer 2024"
+    file: "newsletter202407.pdf"
+---
+<h1>Newsletters</h1>
+
+<p>Our club newsletter, in PDF format. Latest issue first.</p>
+
+<ul class="file-list">
+  {% for n in newsletters %}
+    <li><a href="{{ ('/documents/' + n.file) | url }}" target="_blank" rel="noopener">{{ n.issue }}</a></li>
+  {% endfor %}
+</ul>
