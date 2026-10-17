@@ -313,11 +313,6 @@ h1, h2, h3 {
   padding-left: 1.1rem;
 }
 
-.privacy-note {
-  color: var(--ink-soft);
-  font-size: 0.9rem;
-}
-
 /* Diary */
 
 .notice-box {
@@ -527,6 +522,40 @@ tr:last-child td {
   font-weight: 400;
   font-size: 0.85rem;
   color: var(--ink-soft);
+}
+
+/* Icon-led link buttons (e.g. contact methods on the About page) */
+
+.icon-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.icon-links__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.icon-links__item:hover {
+  border-color: var(--green-600);
+}
+
+.icon-links__item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 /* Footer */
