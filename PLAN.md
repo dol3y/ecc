@@ -235,17 +235,87 @@ time. Feedback:
     pathPrefix stopgap is doing its job). End-to-end deploy pipeline is
     now verified on real infrastructure, not just locally.
 
+## Status update 2026-10-17
+
+Big content/navigation push. Site has grown from home+diary to six live
+pages, all merged to `main` via a sequence of small branch → PR → merge
+cycles (GitHub CLI isn't authenticated in this environment, so each PR was
+opened via the compare URL `gh push` prints, and merged by the user on
+GitHub; local `main` synced with `git fetch && git merge --ff-only` after
+each merge).
+
+1. **Header/nav redesign** (user reviewed live in browser, iterated):
+   - Removed the duplicated club name text from the banner (it's already
+     the page `<h1>`).
+   - Replaced the old two-list setup (a full sitemap `nav` plus a separate
+     `quickLinks` subset) with **one** `site.nav` list in `src/_data/site.js`
+     that drives *both* the desktop menu bar (pills in the header) and the
+     mobile hamburger dropdown (`partials/nav.njk`) — can't drift out of
+     sync now.
+   - Desktop shows the menu bar; mobile shows **only** the hamburger (menu
+     bar is `display: none` below the 760px breakpoint) — explicit user
+     request, since the two together were too cramped on small screens.
+   - Logo enlarged on desktop (84px) vs mobile (56px), desktop-only via the
+     existing breakpoint.
+   - Nav standardised down to: **Diary, Newsletters, AGM, Frequent Flyers,
+     About** (dropped Home/Ride reports/Guidance/Activities/Links/Archive/
+     Contact us from the visible nav for now — Home is reachable via the
+     logo, Contact is folded into the About page).
+   - Logo file renamed `ecc-logo-final.svg` → `ecc-logo.svg`; also wired up
+     as the site favicon (`<link rel="icon" type="image/svg+xml">`).
+2. **New pages**, all linked from the standardised nav:
+   - **About** (`src/about.njk`, `/about/`) — club intro copy (user-authored,
+     not auto-generated) plus icon-led contact buttons (WhatsApp group,
+     email). **The WhatsApp button is a placeholder URL** — flagged with an
+     HTML comment right above it in the file — the real site never
+     published an invite link anywhere fetchable, so a dummy was used with
+     explicit user sign-off; needs the real link before launch.
+   - **Code of Conduct** (`src/conduct.njk`, `/conduct/`) — migrated from
+     `conduct.html`, fixing the same "don't replicate the markup bug"
+     judgement call as elsewhere (minor, no stray unclosed tags carried
+     over).
+   - **Newsletters** (`src/newsletters.njk`, `/newsletters/`) — the four
+     current newsletter PDFs downloaded from the live site into
+     `src/documents/` (passthrough-copied to `/documents/`, the same folder
+     earmarked for AGM minutes PDFs later), listed newest-first via a
+     front-matter array in the template.
+   - **Frequent Flyers** (`src/frequent-flyers.md`, `/frequent-flyers/`) —
+     migrated from `rides_2026.html#merit` (points table + current
+     membership). **Deliberately plain Markdown** (via
+     `templateEngineOverride: njk,md` so the one internal link still goes
+     through the `url` filter/pathPrefix correctly) so non-technical club
+     members can hand-edit the points table without touching HTML.
+3. **Diary**: re-fetched `diary.html` fresh from the live site (the
+   previously-saved research copy was a month stale) and built out **all of
+   2026, January–November** (previously only Jan + Sept existed as sample
+   data). Key judgement call: the live site hides each month from the page
+   via one big HTML comment once it's over — this was **not** replicated;
+   per the existing "history stays visible" decision, all of Jan–Oct is
+   regular non-draft content, and only the genuinely not-yet-announced
+   future entries (still HTML-commented on the live site as of the fetch)
+   were marked `draft: true`. Diary month sort order flipped to
+   **newest-first** (was oldest-first) per explicit user request.
+4. **Homepage/footer content reshuffled** a few times based on user
+   feedback: cookie notice moved out of the homepage body into the shared
+   footer (now site-wide); "Membership is free" moved the other way, out of
+   the footer and onto the homepage as its closing paragraph, linking to
+   the About page. Footer's italic styling removed.
+5. **`README.md` brought up to date** with all of the above — current page
+   list, how to add a newsletter, how to edit the Frequent Flyers page, full
+   file structure, and the WhatsApp-placeholder follow-up.
+
 ## Outstanding / not yet done
-- Rest of the site's pages (ride reports, guidance, activities,
-  newsletters/AGM PDFs, links, archive, contact) — deferred, home+diary
-  only so far.
+- Rest of the site's pages (ride reports, guidance, activities, links,
+  archive) — still deferred.
+- **Real WhatsApp group invite link** needed in `src/about.njk` (currently
+  a flagged placeholder) before this goes live.
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
   without explicit user sign-off. If/when it happens, remove the
   `PATH_PREFIX` stopgap described above (see deploy.yml + .eleventy.js).
 
 ## Next step when resuming
-Deploy pipeline is live and verified — no infra work left. Next up is
-deferred content: build out the rest of the site's pages (ride reports,
-guidance, activities, newsletters/AGM PDFs, links, archive, contact),
-following the same pattern as home+diary. DNS cutover stays a separate,
-later, explicit-sign-off step.
+No infra work left, deploy pipeline verified. Content-wise: either keep
+building out the remaining deferred pages (ride reports, guidance,
+activities, links, archive) following the established pattern, or close out
+the WhatsApp placeholder if the user has the real invite link by then. DNS
+cutover stays a separate, later, explicit-sign-off step.
