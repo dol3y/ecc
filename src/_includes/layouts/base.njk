@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title or site.title }}{% if title %} · {{ site.title }}{% endif %}</title>
   <meta name="description" content="{{ description or site.tagline }}">
+  <link rel="icon" type="image/svg+xml" href="{{ '/images/ecc-logo.svg' | url }}">
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body>
@@ -13,7 +14,7 @@
   <header class="site-header">
     <div class="site-header__bar">
       <a class="site-header__brand" href="{{ '/' | url }}">
-        <img class="site-header__logo" src="{{ '/images/ecc-logo-final.svg' | url }}" alt="{{ site.title }} logo" width="56" height="56">
+        <img class="site-header__logo" src="{{ '/images/ecc-logo.svg' | url }}" alt="{{ site.title }} logo" width="56" height="56">
       </a>
 
       <ul class="menu-bar">
