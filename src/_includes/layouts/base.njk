@@ -43,9 +43,11 @@
 
   <footer class="site-footer">
     <div class="site-footer__inner">
-      <p>&copy; {{ site.buildDate | formatDate("yyyy") }} {{ site.title }}. Membership is free — see the
-        <a href="{{ '/#join' | url }}">contact page</a> to join us.</p>
+      <p>&copy; {{ site.buildDate | formatDate("yyyy") }} {{ site.title }}.</p>
       <p class="site-footer__meta">Site last built {{ site.buildDate | formatDate("d LLLL yyyy") }}.</p>
+      <p>This site does not use
+        <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank" rel="noopener">cookies</a>, and we
+        do not track or save visitors' data.</p>
     </div>
   </footer>
 </body>
