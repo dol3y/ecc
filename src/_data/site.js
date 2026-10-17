@@ -4,21 +4,15 @@ module.exports = {
   buildDate: new Date(),
   showDrafts: process.env.SHOW_DRAFTS === "true",
 
-  // Full site map lives here so the nav is data-driven. Add an `href` to
-  // switch an item on once its page exists; items without `href` render
-  // as inactive/greyed labels so the menu structure is visible now without
-  // dangling links. See PLAN.md — diary + home is the current build; the
-  // rest of this list is what the next pass fills in.
+  // Standardised site nav — shown as pills in the header banner on desktop,
+  // and inside the hamburger dropdown on mobile (same list, both places).
+  // Add an `href` to switch an item on once its page exists; items without
+  // `href` render as inactive/greyed labels.
   nav: [
-    { label: "Home", href: "/" },
     { label: "Diary", href: "/diary/" },
-    { label: "Ride reports" },
-    { label: "Guidance" },
-    { label: "Activities" },
-    { label: "Newsletters" },
-    { label: "AGM Minutes" },
-    { label: "Links" },
-    { label: "Archive" },
-    { label: "Contact us" },
+    { label: "Newsletters", href: "/newsletters/" },
+    { label: "AGM" },
+    { label: "Frequent Flyers", href: "/frequent-flyers/" },
+    { label: "About", href: "/about/" },
   ],
 };

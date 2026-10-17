@@ -85,15 +85,11 @@ h1, h2, h3 {
 .site-header__brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
 .site-header__logo {
-  margin-left: auto;
+  display: block;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -101,8 +97,45 @@ h1, h2, h3 {
   flex-shrink: 0;
 }
 
+/* Desktop-only shortcut strip; hidden on mobile, where the hamburger is
+   the only way into navigation (see the min-width: 760px block below). */
+.menu-bar {
+  display: none;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-bar a,
+.menu-bar__soon {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.menu-bar a {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-bar a:hover {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.menu-bar__soon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .nav-toggle {
   position: relative;
+  margin-left: auto;
 }
 
 .nav-toggle__button {
@@ -176,6 +209,15 @@ h1, h2, h3 {
 }
 
 @media (min-width: 760px) {
+  .site-header__logo {
+    width: 84px;
+    height: 84px;
+  }
+
+  .menu-bar {
+    display: flex;
+  }
+
   .nav-toggle__button {
     display: none;
   }
@@ -187,6 +229,8 @@ h1, h2, h3 {
   .nav {
     all: unset;
     display: flex !important;
+    order: 3;
+    margin-left: auto;
   }
 
   .nav__list {
@@ -267,38 +311,6 @@ h1, h2, h3 {
 .whats-new ul {
   margin: 0;
   padding-left: 1.1rem;
-}
-
-.quick-links {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0;
-  margin: 0 0 1.5rem;
-}
-
-.quick-links li a,
-.quick-links__soon {
-  display: block;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius);
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.quick-links li a {
-  color: var(--green-700);
-}
-
-.quick-links li a:hover {
-  border-color: var(--green-600);
-}
-
-.quick-links__soon {
-  color: #9aa39d;
 }
 
 .privacy-note {
@@ -454,6 +466,67 @@ h1, h2, h3 {
 .is-struck {
   text-decoration: line-through;
   opacity: 0.6;
+}
+
+/* Plain content tables (e.g. Markdown-authored pages) */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Downloadable file lists (newsletters, AGM minutes, etc.) */
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.file-list li a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.file-list li a:hover {
+  border-color: var(--green-600);
+}
+
+.file-list li a::after {
+  content: "Download PDF ↓";
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
 }
 
 /* Footer */
