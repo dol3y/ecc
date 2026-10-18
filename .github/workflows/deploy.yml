@@ -4,6 +4,12 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  schedule:
+    # Daily rebuild so the diary's upcoming/past ride split (a build-time
+    # cutoff) advances even on days with no content push. 06:00 UTC is
+    # safely past midnight UK time (BST is UTC+1) so the date has rolled
+    # over for users before this runs.
+    - cron: "0 6 * * *"
 
 permissions:
   contents: read
