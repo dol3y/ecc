@@ -341,13 +341,26 @@ h1, h2, h3 {
   font-weight: 600;
 }
 
-.diary-month {
+.diary-section {
   margin-top: 2.5rem;
 }
 
-.diary-month h2 {
+.diary-section > h2 {
   border-bottom: 2px solid var(--green-600);
   padding-bottom: 0.35rem;
+}
+
+.diary-month {
+  margin-top: 2rem;
+}
+
+.diary-month h3 {
+  color: var(--ink-soft);
+}
+
+.diary-empty {
+  color: var(--ink-soft);
+  margin-top: 1rem;
 }
 
 .ride-list {
