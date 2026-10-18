@@ -304,6 +304,51 @@ each merge).
    list, how to add a newsletter, how to edit the Frequent Flyers page, full
    file structure, and the WhatsApp-placeholder follow-up.
 
+## Status update 2026-10-18
+
+Diary restructured to split upcoming vs. past rides, plus a small content
+fix, each shipped as its own branch → PR → merge cycle (same `gh push` +
+compare-URL + user-merges-on-GitHub + local `git fetch && git merge
+--ff-only` flow as before; GitHub auto-deletes the head branch on merge, so
+local branch deletion is the only cleanup needed).
+
+1. **Diary upcoming/past split** (user-requested after asking whether a
+   static site could do this at all):
+   - `diary.njk` now renders two sections instead of one flat month list:
+     **"Upcoming rides and events"** — every non-past ride flattened across
+     *all* months and sorted chronologically, soonest first (drafts, when
+     `SHOW_DRAFTS=true`, appended after confirmed rides, not interleaved) —
+     and **"Past rides and events"** — unchanged from before: grouped by
+     month, newest month first, rides within a month in their existing
+     (ascending) order. Months with zero past rides are skipped so there's
+     no empty section.
+   - New `.eleventy.js` filters: `flattenRides`, `upcoming`, `past`,
+     `sortByDate`, plus a module-level `todayISO` cutoff computed once per
+     build. A ride dated exactly "today" counts as upcoming.
+   - `src/css/style.css`: renamed the old `.diary-month h2` heading style to
+     `.diary-section > h2` (used by the two new top-level headings); month
+     names under "Past rides and events" are now `<h3>`, styled more
+     subdued; added a small "No rides currently scheduled" empty state.
+   - **Known limitation, addressed same day (see #2 below):** the
+     upcoming/past cutoff is fixed at build time, so it only used to advance
+     when something was pushed to `main`.
+2. **Daily scheduled rebuild**: added a `schedule` trigger (`cron: "0 6 * *
+   *"`, daily) to `.github/workflows/deploy.yml`, alongside the existing
+   `push`/`workflow_dispatch` triggers — specifically so the diary's
+   upcoming/past boundary advances even on days with no content change.
+   06:00 UTC chosen to be safely past midnight UK time (BST is UTC+1) so
+   the date has rolled over for users before the rebuild runs. Verified via
+   the public GitHub Actions API (`gh` isn't authenticated in this
+   environment) that the push-triggered run which deployed this change
+   itself succeeded; the `schedule` trigger's first actual firing hadn't
+   happened yet as of this check (first cron window was still hours away) —
+   **not yet independently confirmed that the cron trigger fires**, only
+   that the workflow file is correctly in place on `main`.
+3. **Content fix**: Frequent Flyers page heading shortened from "Frequent
+   Flyers Group" to "Frequent Flyers" (`src/frequent-flyers.md`).
+4. **README.md** updated: documents the new upcoming/past diary sections
+   and that the cutoff is build-time + daily-cron-driven.
+
 ## Outstanding / not yet done
 - Rest of the site's pages (ride reports, guidance, activities, links,
   archive) — still deferred.
@@ -312,9 +357,15 @@ each merge).
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
   without explicit user sign-off. If/when it happens, remove the
   `PATH_PREFIX` stopgap described above (see deploy.yml + .eleventy.js).
+- **Confirm the new daily cron trigger actually fires** — check the Actions
+  tab (or `gh run list --workflow=deploy.yml` once `gh` is authenticated, or
+  the public API as a fallback) for a run with `"event": "schedule"` after
+  the next 06:00 UTC window, to be sure the diary's upcoming/past boundary
+  is really advancing on its own and not just on pushes.
 
 ## Next step when resuming
-No infra work left, deploy pipeline verified. Content-wise: either keep
+No infra work left to build, but the new cron trigger's first real firing
+still needs a one-time confirmation (see above). Content-wise: either keep
 building out the remaining deferred pages (ride reports, guidance,
 activities, links, archive) following the established pattern, or close out
 the WhatsApp placeholder if the user has the real invite link by then. DNS
