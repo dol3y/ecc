@@ -27,14 +27,32 @@ permalink: /diary/
   earlier still if you want to chat or grab a coffee first.
 </p>
 
-{% for month in collections.diaryMonth %}
-  <section class="diary-month">
-    <h2>{{ month.data.month | formatMonth }}</h2>
-    <div class="ride-list">
-      {% for ride in month.data.rides | published %}{{ rideCard(ride) }}{% endfor %}
-      {% if site.showDrafts %}
-        {% for ride in month.data.rides | draftsOnly %}{{ rideCard(ride) }}{% endfor %}
-      {% endif %}
-    </div>
-  </section>
-{% endfor %}
+{% set upcomingConfirmed = collections.diaryMonth | flattenRides | published | upcoming | sortByDate %}
+
+<section class="diary-section">
+  <h2>Upcoming rides and events</h2>
+  <div class="ride-list">
+    {% for ride in upcomingConfirmed %}{{ rideCard(ride) }}{% endfor %}
+    {% if site.showDrafts %}
+      {% for ride in collections.diaryMonth | flattenRides | draftsOnly | upcoming | sortByDate %}{{ rideCard(ride) }}{% endfor %}
+    {% endif %}
+  </div>
+  {% if not upcomingConfirmed.length %}
+    <p class="diary-empty">No rides currently scheduled — check back soon.</p>
+  {% endif %}
+</section>
+
+<section class="diary-section">
+  <h2>Past rides and events</h2>
+  {% for month in collections.diaryMonth %}
+    {% set pastRides = month.data.rides | published | past %}
+    {% if pastRides.length %}
+      <div class="diary-month">
+        <h3>{{ month.data.month | formatMonth }}</h3>
+        <div class="ride-list">
+          {% for ride in pastRides %}{{ rideCard(ride) }}{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</section>
