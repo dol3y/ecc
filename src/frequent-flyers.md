@@ -5,7 +5,7 @@ permalink: /frequent-flyers/
 templateEngineOverride: njk,md
 ---
 
-# Frequent Flyers Group
+# Frequent Flyers
 
 The 'Frequent Flyers' group is made up from the top points scorers after the preceding December or June. The
 group may co-opt other club members as appropriate. This group is responsible for taking policy decisions on
