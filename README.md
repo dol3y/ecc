@@ -46,6 +46,13 @@ rides:
   month ride-by-ride without it going live early.
 - Months are sorted automatically by the `month` field, newest first — no
   need to keep them in file order.
+- The diary page itself splits rides into two sections: **"Upcoming rides
+  and events"** (every non-past ride across all months, flattened and
+  sorted chronologically, soonest first) and **"Past rides and events"**
+  (unchanged month-grouped, newest-month-first layout). The cutoff between
+  the two is today's date *as of the last build* — the site rebuilds daily
+  via a scheduled GitHub Actions run (see `PLAN.md`) so this advances on
+  its own without needing a content push.
 
 ## Adding a newsletter
 
