@@ -2,7 +2,13 @@
   <ul class="nav__list">
     {% for item in site.nav %}
       <li class="nav__item">
-        {% if item.href %}
+        {% if item.dynamicHref == "latestRideReport" %}
+          {% if latestRideReportUrl %}
+            <a href="{{ latestRideReportUrl | url }}"{% if latestRideReportUrl == page.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
+          {% else %}
+            <span class="nav__item--soon" title="Coming soon">{{ item.label }}</span>
+          {% endif %}
+        {% elif item.href %}
           <a href="{{ item.href | url }}"{% if item.href == page.url %} aria-current="page"{% endif %}>{{ item.label }}</a>
         {% else %}
           <span class="nav__item--soon" title="Coming soon">{{ item.label }}</span>

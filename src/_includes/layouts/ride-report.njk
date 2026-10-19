@@ -1,0 +1,55 @@
+---
+layout: layouts/base.njk
+---
+{%- set older = collections.rideReport | getPreviousCollectionItem %}
+{%- set newer = collections.rideReport | getNextCollectionItem %}
+
+<article class="ride-report">
+  <p class="ride-report__date">{{ date | formatDate }}</p>
+  <h1>
+    {{ title }}
+    {% if status == "cancelled" %}<span class="ride-card__badge ride-card__badge--cancelled">Cancelled</span>{% endif %}
+  </h1>
+
+  {% if images and images.length %}
+    <div class="ride-report__photos">
+      {% for image in images %}
+        <figure class="ride-report__photo ride-report__photo--{{ image.align or 'left' }}">
+          <img src="{{ ('/images/ride-reports/' + image.src) | url }}" alt="{{ image.alt }}" loading="lazy">
+          {% if image.caption or image.credit %}
+            <figcaption>
+              {{ image.caption }}{% if image.credit %}<span class="ride-report__credit">Photo: {{ image.credit }}</span>{% endif %}
+            </figcaption>
+          {% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="ride-report__body">
+    {{ content | safe }}
+  </div>
+
+  {% if leader or riders or backstop %}
+    <dl class="ride-report__people">
+      {% if leader %}<div><dt>Leader</dt><dd>{{ leader }}</dd></div>{% endif %}
+      {% if riders %}<div><dt>Riders</dt><dd>{{ riders }}</dd></div>{% endif %}
+      {% if backstop %}<div><dt>Backstop</dt><dd>{{ backstop }}</dd></div>{% endif %}
+    </dl>
+  {% endif %}
+
+  <nav class="ride-report__pager" aria-label="Ride report navigation">
+    {% if newer %}
+      <a class="ride-report__pager-link" href="{{ newer.url | url }}">
+        <span class="ride-report__pager-label">← Newer</span>
+        <span class="ride-report__pager-title">{{ newer.data.title }}</span>
+      </a>
+    {% endif %}
+    {% if older %}
+      <a class="ride-report__pager-link ride-report__pager-link--older" href="{{ older.url | url }}">
+        <span class="ride-report__pager-label">Older →</span>
+        <span class="ride-report__pager-title">{{ older.data.title }}</span>
+      </a>
+    {% endif %}
+  </nav>
+</article>

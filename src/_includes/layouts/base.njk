@@ -33,7 +33,13 @@
       <ul class="menu-bar">
         {% for item in site.nav %}
           <li>
-            {% if item.href %}
+            {% if item.dynamicHref == "latestRideReport" %}
+              {% if latestRideReportUrl %}
+                <a href="{{ latestRideReportUrl | url }}">{{ item.label }}</a>
+              {% else %}
+                <span class="menu-bar__soon" title="Coming soon">{{ item.label }}</span>
+              {% endif %}
+            {% elif item.href %}
               <a href="{{ item.href if item.external else (item.href | url) }}">{{ item.label }}</a>
             {% else %}
               <span class="menu-bar__soon" title="Coming soon">{{ item.label }}</span>

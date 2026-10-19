@@ -15,9 +15,13 @@ module.exports = {
   // Standardised site nav — shown as pills in the header banner on desktop,
   // and inside the hamburger dropdown on mobile (same list, both places).
   // Add an `href` to switch an item on once its page exists; items without
-  // `href` render as inactive/greyed labels.
+  // `href` render as inactive/greyed labels. `dynamicHref: "latestRideReport"`
+  // is a special case: its href is computed at build time (see
+  // src/_data/eleventyComputed.js) rather than fixed, since it always
+  // points at whichever ride report is currently newest.
   nav: [
     { label: "Diary", href: "/diary/" },
+    { label: "Ride Reports", dynamicHref: "latestRideReport" },
     { label: "Newsletters", href: "/newsletters/" },
     { label: "AGM" },
     { label: "Frequent Flyers", href: "/frequent-flyers/" },

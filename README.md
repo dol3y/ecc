@@ -67,6 +67,51 @@ list at the top of `src/newsletters.njk`:
 `src/documents/` is passthrough-copied as-is to `/documents/` — the same
 folder is meant to be reused for AGM minutes PDFs once that page is built.
 
+## Adding a ride report
+
+Ride reports are a blog: one Markdown file per report in `src/ride-reports/`,
+newest rendered first. Create `src/ride-reports/YYYY-MM-DD-slug.md`:
+
+```yaml
+---
+title: "Ride Title"
+date: 2026-11-01
+leader: Name
+riders: "Name, Name, Name"
+backstop: Name
+images:
+  - src: "some-photo.jpg"        # filename only; the file itself goes in src/images/ride-reports/
+    alt: "Accessible description of the photo"
+    caption: "Caption shown under the photo"
+    credit: Name
+    align: left                   # or right; omit to default to left
+---
+Report text as plain Markdown. Multiple paragraphs are fine, and so are
+multiple accounts of the same ride (the site has precedent for this — see
+`src/ride-reports/2026-07-26-bricket-wood.md`).
+```
+
+- `leader`/`riders`/`backstop` are free text, not a structured list — copy
+  however the club phrases it (e.g. two co-leaders, a "part ride" note).
+  Omit any of the three entirely for a non-ride event (see
+  `2026-09-10-presentation-evening.md`, which has no leader/riders/backstop
+  at all).
+- `images` is optional and can have any number of entries, or none.
+- The permalink is built from the `date` front-matter field plus a slug
+  derived from the filename, e.g. `2026-11-01-some-ride.md` becomes
+  `/ride-reports/2026-11-01-some-ride/` (computed in
+  `src/_data/eleventyComputed.js`, not from the filename directly, so a
+  future rename or an unconventional filename can't break it). Including
+  the date keeps URLs collision-proof even as the archive grows — the
+  filename's own slug only needs to be unique *within that date*, e.g.
+  the two Les Bailey Memorial rides both on 2026-06-14 just need
+  different slugs from each other.
+- No `draft` flag like the diary has — a report either exists or it
+  doesn't, since by definition you're writing about a ride that already
+  happened.
+- The nav's "Ride Reports" link and each report's Newer/Older pager are all
+  computed automatically from the `date` field — nothing else to wire up.
+
 ## Editing the Frequent Flyers page
 
 `src/frequent-flyers.md` is plain Markdown on purpose, so the points table
@@ -79,12 +124,20 @@ change.
 - `src/_data/site.js` — site title, tagline, and the nav list. This one
   list drives *both* the desktop menu bar in the header and the mobile
   hamburger dropdown (`src/_includes/partials/nav.njk`) — add an `href` to
-  switch an item on once that page exists.
+  switch an item on once that page exists. "Ride Reports" is a special
+  case with `dynamicHref` instead of `href` — see `src/_data/eleventyComputed.js`.
+- `src/_data/eleventyComputed.js` — build-time computed data: the nav's
+  "Ride Reports" link (always the newest report) and the auto-generated
+  meta description for ride report pages that don't set their own.
 - `src/_includes/layouts/base.njk` — shared header/nav/footer, favicon.
 - `src/_includes/partials/nav.njk` — the mobile hamburger dropdown.
 - `src/_includes/partials/ride-card.njk` — the diary entry card macro.
 - `src/diary/*.md` — one data file per month.
 - `src/diary.njk` — renders all diary months.
+- `src/ride-reports/*.md` — one file per ride report (see "Adding a ride
+  report" above); `ride-reports.json` sets the shared tag/layout/permalink.
+- `src/_includes/layouts/ride-report.njk` — renders a single report (photos,
+  body, leader/riders/backstop, Newer/Older pager).
 - `src/index.njk` — home page.
 - `src/about.njk` — About page (club intro, Code of Conduct link, contact
   buttons for WhatsApp/email).
@@ -93,6 +146,7 @@ change.
 - `src/frequent-flyers.md` — Frequent Flyers page (see above).
 - `src/documents/` — PDFs served as-is at `/documents/`.
 - `src/images/ecc-logo.svg` — club logo; also used as the site favicon.
+- `src/images/ride-reports/` — photos referenced by ride reports.
 - `src/css/style.css` — all styles (mobile-first, single breakpoint at 760px).
 - `src/sitemap.njk` — generates `/sitemap.xml` from every page that has a URL.
 - `src/robots.txt` — passthrough-copied as-is; allows all crawling and
