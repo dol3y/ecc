@@ -6,10 +6,12 @@ on:
   workflow_dispatch:
   schedule:
     # Daily rebuild so the diary's upcoming/past ride split (a build-time
-    # cutoff) advances even on days with no content push. 06:00 UTC is
+    # cutoff) advances even on days with no content push. 06:25 UTC is
     # safely past midnight UK time (BST is UTC+1) so the date has rolled
-    # over for users before this runs.
-    - cron: "0 6 * * *"
+    # over for users before this runs. Off the top of the hour on purpose —
+    # GitHub Actions schedules runs on the hour are the most likely to be
+    # delayed/dropped under load.
+    - cron: "25 6 * * *"
 
 permissions:
   contents: read
@@ -24,8 +26,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm
@@ -33,7 +35,7 @@ jobs:
       - run: npm run build
         env:
           PATH_PREFIX: /ecc/
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
@@ -46,4 +48,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
