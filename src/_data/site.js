@@ -23,7 +23,6 @@ module.exports = {
     { label: "Diary", href: "/diary/" },
     { label: "Ride Reports", dynamicHref: "latestRideReport" },
     { label: "Newsletters", href: "/newsletters/" },
-    { label: "AGM" },
     { label: "Frequent Flyers", href: "/frequent-flyers/" },
     { label: "About", href: "/about/" },
   ],
