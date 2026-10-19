@@ -571,6 +571,128 @@ tr:last-child td {
   flex-shrink: 0;
 }
 
+/* Ride reports */
+
+.ride-report__date {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.ride-report h1 {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ride-report__photos {
+  margin: 1rem 0;
+}
+
+.ride-report__photo {
+  margin: 0 0 1rem;
+}
+
+.ride-report__photo img {
+  width: 100%;
+  border-radius: var(--radius);
+  display: block;
+}
+
+.ride-report__photo figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.ride-report__credit {
+  display: block;
+}
+
+@media (min-width: 760px) {
+  .ride-report__photo {
+    max-width: 45%;
+  }
+
+  .ride-report__photo--left {
+    float: left;
+    margin-right: 1.25rem;
+  }
+
+  .ride-report__photo--right {
+    float: right;
+    margin-left: 1.25rem;
+  }
+}
+
+.ride-report__body {
+  clear: none;
+}
+
+.ride-report__body p {
+  margin: 0 0 1rem;
+}
+
+.ride-report__people {
+  clear: both;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--green-600);
+  border-radius: var(--radius);
+}
+
+.ride-report__people dt {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.ride-report__people dd {
+  margin: 0;
+}
+
+.ride-report__pager {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 760px) {
+  .ride-report__pager {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ride-report__pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-decoration: none;
+}
+
+.ride-report__pager-link--older {
+  text-align: right;
+}
+
+.ride-report__pager-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.ride-report__pager-title {
+  font-weight: 600;
+}
+
 /* Footer */
 
 .site-footer {

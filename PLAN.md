@@ -350,8 +350,8 @@ local branch deletion is the only cleanup needed).
    and that the cutoff is build-time + daily-cron-driven.
 
 ## Outstanding / not yet done
-- Rest of the site's pages (ride reports, guidance, activities, links,
-  archive) — still deferred.
+- Rest of the site's pages (guidance, activities, links, archive) — still
+  deferred. Ride reports are now done (see below) — no longer on this list.
 - **Real WhatsApp group invite link** needed in `src/about.njk` (currently
   a flagged placeholder) before this goes live.
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
@@ -429,13 +429,96 @@ local branch deletion is the only cleanup needed).
      listing, backlinks from Cycling UK's club finder) was discussed but is
      explicitly not code — flagged to the user as next steps once live.
 
+## Ride reports (added 2026-10-19)
+
+User's design: a blog, not a single page like the old `rides_YYYY.html`
+pages. Built as:
+
+- One Markdown file per report in `src/ride-reports/`, tagged `rideReport`
+  via the directory data file `ride-reports.json`, which also sets the
+  shared layout.
+  - **Permalink, revised after initial build**: first cut used
+    `/ride-reports/{{ page.fileSlug }}/` (Eleventy's `fileSlug` strips a
+    recognized `YYYY-MM-DD-` filename prefix automatically), e.g.
+    `/ride-reports/olympic-park/`. User flagged the real risk this creates
+    as the archive grows: two reports that end up with the same
+    slugified title (not far-fetched for a monthly ride blog over years)
+    would silently collide. Fixed by computing the permalink from the
+    `date` **front-matter field** instead of the filename, in
+    `src/_data/eleventyComputed.js` (plain JS `Date` → ISO-date string,
+    not a template filter — plain `.md` files with no
+    `templateEngineOverride` resolve `permalink` with Liquid, which can't
+    call our Nunjucks `formatDate` filter, so this had to be computed
+    data rather than a templated string): `/ride-reports/2026-02-01-olympic-park/`.
+    Decouples the URL from filename convention entirely — collision-proof
+    as long as (date + title-slug) is unique, which only needs
+    disambiguating *within the same date* (the two Les Bailey Memorial
+    rides, both 2026-06-14, already needed — and have — different
+    slugs).
+- `.eleventy.js`: new `rideReport` collection, sorted **oldest-first**
+  (opposite of `diaryMonth`) specifically so Eleventy's built-in
+  `getPreviousCollectionItem`/`getNextCollectionItem` filters resolve to
+  "older"/"newer" directly in the new `layouts/ride-report.njk` layout —
+  no custom pagination logic needed.
+- **Nav**: per user's explicit request, "Ride Reports" in `site.nav`
+  always links straight to the latest report (no separate listing/index
+  page). Since that target changes every time a new report is added,
+  it's computed at build time rather than hardcoded: `site.nav`'s entry
+  uses `dynamicHref: "latestRideReport"` instead of a fixed `href`, and
+  the actual URL comes from a new `src/_data/eleventyComputed.js` (which
+  also auto-generates the themed meta description for report pages that
+  don't set their own — too many to hand-write individually). Both
+  `base.njk` (desktop pills) and `partials/nav.njk` (mobile dropdown)
+  special-case this one nav item.
+- **Data model**: `title`, `date`, `leader`/`riders`/`backstop` (all
+  plain free-text strings, not structured lists/arrays — the real data is
+  informally phrased, e.g. two co-leaders, "Pat (part ride)", "Backstops
+  Jeff, Richard" — forcing it into arrays would lose or mangle that), and
+  an optional `images` array (`src` filename only, `alt`, `caption`,
+  `credit`, `align: left|right`). No `draft` flag like the diary has —
+  these are retrospective write-ups of rides that already happened, so
+  there's no "not yet announced" state to hide.
+- **Content migrated**: all of 2026 (per user's explicit scope decision —
+  2021–2025 stay deferred like the rest of the old site). 29 reports
+  fetched from the live `rides_2026.html`, re-typed as clean Markdown with
+  HTML entities fixed (`&eacute;` → é, etc.) and the credits line moved out
+  of the prose into the structured leader/riders/backstop fields. **4
+  entries skipped**: live-site placeholders with literally no report text
+  ("To be supplied") — Jun 7, Jul 19, Aug 9, Aug 16. Entries that did have
+  real (if short) content were kept, including a cancelled ride (Aug 29
+  Whitwell — reuses the diary's existing `.ride-card__badge--cancelled`
+  CSS class for a "Cancelled" badge) and a two-perspective report (Jul 26
+  Bricket Wood, matching the live site's own "multiple points of view are
+  encouraged" policy — kept as two paragraphs in one report rather than
+  two separate posts, since it's one ride). One minor edit: the Mar 15
+  entry's link to a since-not-migrated `.docx` document was dropped rather
+  than left dangling.
+- **Photos**: all 12 real JPEGs referenced by the migrated reports were
+  downloaded from the live site (verified each as a real JPEG, not an
+  error page) into `src/images/ride-reports/`, with captions/credits
+  preserved as structured fields. One filename had a stray literal
+  " jpg" in it on the live site (`...-PL02 jpg.jpg`) — fetched successfully
+  at that exact (buggy) URL, but renamed cleanly on our side
+  (`...-PL02.jpg`) since there's no reason to carry the live site's typo
+  into our own filenames.
+- Verified: a plain local build, a `PATH_PREFIX=/ecc/` build, and a
+  `SHOW_DRAFTS=true` build all produce correct output — checked nav
+  links, image URLs, the Newer/Older pager (correctly one-sided on the
+  oldest and newest reports), and the two Les Bailey reports' mutual
+  cross-links, directly in the generated HTML under all three build
+  modes.
+- New CSS block ("Ride reports" section in `style.css`): photo
+  float-left/right at the existing 760px breakpoint (stacked full-width
+  below it), a people/credits card reusing the diary's existing
+  paper-raised-card look, and a two-column Newer/Older pager.
+
 ## Next step when resuming
-No infra work left to build. Two confirmations still outstanding: (1) does
-the 06:25 UTC cron actually fire now (check the public Actions API, same
+No infra work left to build. Confirmations still outstanding: (1) does the
+06:25 UTC cron actually fire now (check the public Actions API, same
 method as before — `gh` is still unauthenticated in this environment), and
 (2) nothing else pending on the SEO side beyond the `og:image` follow-up
 above. Content-wise: either keep building out the remaining deferred pages
-(ride reports, guidance, activities, links, archive) following the
-established pattern, or close out the WhatsApp placeholder if the user has
-the real invite link by then. DNS cutover stays a separate, later,
-explicit-sign-off step.
+(guidance, activities, links, archive) following the established pattern,
+migrate 2021–2025 ride reports if the user wants the full archive, or close
+out the WhatsApp placeholder if the user has the real invite link by then.
+DNS cutover stays a separate, later, explicit-sign-off step.

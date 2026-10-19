@@ -26,6 +26,13 @@ module.exports = function (eleventyConfig) {
     collectionApi.getFilteredByTag("diaryMonth").sort((a, b) => b.data.month.localeCompare(a.data.month))
   );
 
+  // Ride reports are one file per report (blog-style), sorted oldest-first
+  // so Eleventy's built-in getPreviousCollectionItem/getNextCollectionItem
+  // filters resolve to "older"/"newer" in the ride-report layout.
+  eleventyConfig.addCollection("rideReport", (collectionApi) =>
+    collectionApi.getFilteredByTag("rideReport").sort((a, b) => a.date - b.date)
+  );
+
   eleventyConfig.addFilter("formatDate", (date, format = "cccc d LLLL yyyy") => {
     if (!date) return "";
     const dt = date instanceof Date ? DateTime.fromJSDate(date) : DateTime.fromISO(date, { zone: "utc" });
