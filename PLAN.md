@@ -356,17 +356,86 @@ local branch deletion is the only cleanup needed).
   a flagged placeholder) before this goes live.
 - DNS cutover to GitHub Pages — not discussed/confirmed, do not do this
   without explicit user sign-off. If/when it happens, remove the
-  `PATH_PREFIX` stopgap described above (see deploy.yml + .eleventy.js).
-- **Confirm the new daily cron trigger actually fires** — check the Actions
-  tab (or `gh run list --workflow=deploy.yml` once `gh` is authenticated, or
-  the public API as a fallback) for a run with `"event": "schedule"` after
-  the next 06:00 UTC window, to be sure the diary's upcoming/past boundary
-  is really advancing on its own and not just on pushes.
+  `PATH_PREFIX` stopgap described above (see deploy.yml + .eleventy.js), and
+  update `site.baseUrl` (`src/_data/site.js`) + the `Sitemap:` line in
+  `src/robots.txt` to the new domain (see "SEO foundations" below).
+- **No Open Graph share image** — `og:image`/`twitter:image` aren't set
+  because only an SVG logo exists; social platforms generally want a
+  raster image (e.g. 1200×630 PNG/JPG) for link previews. Low priority but
+  easy win once an image exists — wire it into `base.njk`.
+
+## Status update 2026-10-19
+
+1. **Diary heading shortened**: "Ride and Events Diary" → "Diary"
+   (`src/diary.njk`).
+2. **Confirmed, then fixed, the daily cron not firing**: checked the public
+   GitHub Actions API the next morning — `events=schedule` returned
+   `total_count: 0`, i.e. the 06:00 UTC cron added yesterday genuinely never
+   ran (workflow YAML itself was fine). Root cause: GitHub documents that
+   scheduled runs exactly on the hour (`:00`) are the most likely to be
+   delayed/dropped under load, since that's the busiest moment across all of
+   GitHub Actions. Fix: moved the cron to `25 6 * * *` (06:25 UTC) in
+   `.github/workflows/deploy.yml`. Not yet independently re-confirmed that
+   06:25 actually fires (first window after the fix lands).
+   - **Aside**: also tried setting up a one-time cloud routine (via this
+     environment's scheduling tool) to check the cron result automatically.
+     It fired but got stuck — session stayed `pending` for 2+ hours with no
+     actual tool execution logged. User asked not to report this as a bug
+     yet (laptop sleep / sandbox-image factors could be at play), so it's
+     just noted here. Checking GitHub's public API directly worked fine and
+     is the more reliable method going forward.
+   - While investigating, also found and fixed a **Node.js 20 actions
+     deprecation warning**: bumped `actions/checkout`, `actions/setup-node`,
+     `actions/configure-pages`, `actions/deploy-pages` to the latest majors
+     (all moved their internal runtime to Node 24).
+     `actions/upload-pages-artifact` is a composite action with no Node
+     runtime of its own, so it was unaffected and left at `v3`. The
+     project's own build toolchain (`node-version: 20`, i.e. what Node
+     version `npm ci`/`npm run build` runs under) is unrelated and
+     unchanged — Node 20 is still an active LTS.
+3. **SEO foundations added**, scoped to the current GitHub Pages URL per
+   explicit user decision (not waiting for DNS cutover):
+   - `src/_data/site.js`: new `baseUrl` (`https://dol3y.github.io`) for
+     building absolute URLs — combine with the existing `url` filter:
+     `{{ site.baseUrl }}{{ page.url | url }}`.
+   - `base.njk`: `lang="en"` → `lang="en-GB"`; added `<link rel="canonical">`,
+     Open Graph (`og:type/site_name/title/description/url`), and Twitter
+     Card (`summary`) tags, all driven by each page's `title`/`description`.
+   - Every page now sets a unique `description` front-matter value
+     (previously all pages fell back to the same generic site tagline) —
+     written to naturally include the target themes: cycling, Enfield,
+     Barnet, North London, social, leisure, non-competitive, inclusive.
+   - Homepage (`src/index.njk`) gained a `SportsOrganization` JSON-LD block
+     (name, url, logo, description, `sport: Cycling`,
+     `areaServed: [Enfield, Barnet, North London]`).
+   - New `src/sitemap.njk` → `/sitemap.xml`, built from every page in
+     `collections.all` that has a URL (guards against the `diaryMonth` data
+     files, which set `permalink: false` and would otherwise show up with a
+     bogus URL).
+   - New `src/robots.txt` (passthrough-copied) — allows all crawling, points
+     at the sitemap. Since it's a static file it can't use `site.baseUrl`,
+     so its `Sitemap:` line is hardcoded — **must be updated by hand** if
+     `baseUrl` ever changes.
+   - Verified: both a plain local build and a `PATH_PREFIX=/ecc/` build
+     produce correct absolute URLs throughout (canonical, OG, JSON-LD,
+     sitemap) — checked generated HTML/XML directly. JSON-LD validated as
+     parseable JSON.
+   - Deliberately **not** touched: existing visible body copy (home/about
+     wording). Meta-level keyword targeting was added, but rewriting the
+     club's actual prose to work in more keywords is a content decision
+     left for the user to approve, not something done unilaterally.
+   - Off-site SEO work (Google Search Console + Bing Webmaster Tools
+     verification and sitemap submission, a Google Business Profile
+     listing, backlinks from Cycling UK's club finder) was discussed but is
+     explicitly not code — flagged to the user as next steps once live.
 
 ## Next step when resuming
-No infra work left to build, but the new cron trigger's first real firing
-still needs a one-time confirmation (see above). Content-wise: either keep
-building out the remaining deferred pages (ride reports, guidance,
-activities, links, archive) following the established pattern, or close out
-the WhatsApp placeholder if the user has the real invite link by then. DNS
-cutover stays a separate, later, explicit-sign-off step.
+No infra work left to build. Two confirmations still outstanding: (1) does
+the 06:25 UTC cron actually fire now (check the public Actions API, same
+method as before — `gh` is still unauthenticated in this environment), and
+(2) nothing else pending on the SEO side beyond the `og:image` follow-up
+above. Content-wise: either keep building out the remaining deferred pages
+(ride reports, guidance, activities, links, archive) following the
+established pattern, or close out the WhatsApp placeholder if the user has
+the real invite link by then. DNS cutover stays a separate, later,
+explicit-sign-off step.

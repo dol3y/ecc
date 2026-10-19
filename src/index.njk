@@ -2,7 +2,22 @@
 title: Home
 layout: layouts/base.njk
 permalink: /
+description: "Friendly, inclusive leisure cycling club in Enfield, North London — social, non-competitive rides open to all abilities across Enfield, Barnet and North London."
 ---
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsOrganization",
+  "name": "{{ site.title }}",
+  "url": "{{ site.baseUrl }}{{ '/' | url }}",
+  "logo": "{{ site.baseUrl }}{{ '/images/ecc-logo.svg' | url }}",
+  "description": "{{ description }}",
+  "sport": "Cycling",
+  "areaServed": ["Enfield", "Barnet", "North London"],
+  "email": "mailto:webmaster@edmontoncycleclub.org"
+}
+</script>
+
 <section class="hero">
   <h1>{{ site.title }}</h1>
   <p class="hero__tagline">{{ site.tagline }}</p>

@@ -3,6 +3,7 @@ title: Frequent Flyers
 layout: layouts/base.njk
 permalink: /frequent-flyers/
 templateEngineOverride: njk,md
+description: "Edmonton Cycle Club's Frequent Flyers group — recognising our top points scorers among the social, non-competitive leisure cyclists in Enfield, North London."
 ---
 
 # Frequent Flyers

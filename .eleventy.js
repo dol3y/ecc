@@ -14,6 +14,10 @@ module.exports = function (eleventyConfig) {
   // PDFs (newsletters, AGM minutes, etc.) — drop a new file in here and
   // it's served as-is at /documents/<filename>.
   eleventyConfig.addPassthroughCopy({ "src/documents": "documents" });
+  // robots.txt is plain static text (no templating available to it), so
+  // its Sitemap: line has the baseUrl hardcoded — keep in sync with
+  // site.js's `baseUrl` if that ever changes (e.g. DNS cutover).
+  eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
 
   // Diary months are plain data files tagged "diaryMonth"; collecting them
   // this way means a new month is just a new file, no template changes.
