@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dol3y.github.io/ecc/sitemap.xml

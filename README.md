@@ -94,6 +94,26 @@ change.
 - `src/documents/` — PDFs served as-is at `/documents/`.
 - `src/images/ecc-logo.svg` — club logo; also used as the site favicon.
 - `src/css/style.css` — all styles (mobile-first, single breakpoint at 760px).
+- `src/sitemap.njk` — generates `/sitemap.xml` from every page that has a URL.
+- `src/robots.txt` — passthrough-copied as-is; allows all crawling and
+  points at the sitemap.
+
+## SEO
+
+- Every page sets a unique `description` in its front matter (falls back to
+  `site.tagline` if omitted) — used for `<meta name="description">`, Open
+  Graph, and Twitter Card tags in `base.njk`.
+- `site.baseUrl` (`src/_data/site.js`) is the absolute origin used to build
+  canonical links, Open Graph URLs, JSON-LD, and `sitemap.xml` — currently
+  the GitHub Pages URL (`https://dol3y.github.io`). **If/when DNS cuts over
+  to a custom domain, update this value and the `Sitemap:` line in
+  `src/robots.txt`** (a static file, so it can't reference `site.baseUrl`).
+- The homepage (`src/index.njk`) carries a `SportsOrganization` JSON-LD
+  block naming the sport and area served (Enfield, Barnet, North London).
+- **Known follow-up:** there's no Open Graph image (`og:image`) yet — only
+  an SVG logo exists, and social platforms (WhatsApp, Facebook) generally
+  need a raster image for link previews. Add a PNG/JPG share image (e.g.
+  1200×630) and wire it into `base.njk`'s OG/Twitter tags when one exists.
 
 ## Known follow-up
 
