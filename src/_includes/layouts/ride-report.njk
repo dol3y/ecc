@@ -5,6 +5,8 @@ layout: layouts/base.njk
 {%- set newer = collections.rideReport | getNextCollectionItem %}
 
 <article class="ride-report">
+  {% include "partials/ride-report-archive.njk" %}
+
   <p class="ride-report__date">{{ date | formatDate }}</p>
   <h1>
     {{ title }}

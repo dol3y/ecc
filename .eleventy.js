@@ -33,6 +33,21 @@ module.exports = function (eleventyConfig) {
     collectionApi.getFilteredByTag("rideReport").sort((a, b) => a.date - b.date)
   );
 
+  // Powers the "browse all ride reports" archive menu: reports grouped by
+  // year, newest year first, newest report first within each year. Kept
+  // as its own collection (rather than grouping in the template) so the
+  // archive scales cleanly as more years of reports are added.
+  eleventyConfig.addCollection("rideReportsByYear", (collectionApi) => {
+    const reports = collectionApi.getFilteredByTag("rideReport").sort((a, b) => b.date - a.date);
+    const byYear = new Map();
+    for (const report of reports) {
+      const year = report.date.getUTCFullYear();
+      if (!byYear.has(year)) byYear.set(year, []);
+      byYear.get(year).push(report);
+    }
+    return [...byYear.entries()].sort((a, b) => b[0] - a[0]).map(([year, reports]) => ({ year, reports }));
+  });
+
   eleventyConfig.addFilter("formatDate", (date, format = "cccc d LLLL yyyy") => {
     if (!date) return "";
     const dt = date instanceof Date ? DateTime.fromJSDate(date) : DateTime.fromISO(date, { zone: "utc" });

@@ -1,0 +1,20 @@
+<details class="ride-archive">
+  <summary class="ride-archive__toggle">Browse all ride reports</summary>
+  <nav class="ride-archive__nav" aria-label="Ride report archive">
+    {% for group in collections.rideReportsByYear %}
+      <details class="ride-archive__year"{% if loop.first %} open{% endif %}>
+        <summary>{{ group.year }}</summary>
+        <ul>
+          {% for report in group.reports %}
+            <li>
+              <a href="{{ report.url | url }}"{% if report.url == page.url %} aria-current="page"{% endif %}>
+                <span class="ride-archive__date">{{ report.date | formatDate("d LLL") }}</span>
+                {{ report.data.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </details>
+    {% endfor %}
+  </nav>
+</details>
